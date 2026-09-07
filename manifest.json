@@ -1,0 +1,12 @@
+{
+  "name": "AM Electrical",
+  "short_name": "AM Electrical",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#F5F3EE",
+  "theme_color": "#17171A",
+  "icons": [
+    { "src": "images/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "images/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
