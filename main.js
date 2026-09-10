@@ -313,56 +313,6 @@
   /* ---------------------------------------------------------------
      Boot
      --------------------------------------------------------------- */
-  /* ---------------------------------------------------------------
-     Nav dropdowns (desktop click/keyboard + mobile accordion)
-     --------------------------------------------------------------- */
-  function initDropdowns() {
-    // Desktop dropdowns: hover is handled purely in CSS; this adds
-    // click/tap + keyboard support and outside-click / Escape close.
-    qsa(".has-dropdown").forEach(function (item) {
-      var trigger = qs(".nav-dropdown__trigger", item);
-      var menu = qs(".nav-dropdown__menu", item);
-      if (!trigger || !menu) return;
-
-      trigger.addEventListener("click", function (e) {
-        e.preventDefault();
-        var isOpen = item.getAttribute("data-open") === "true";
-        qsa(".has-dropdown").forEach(function (other) { other.setAttribute("data-open", "false"); });
-        item.setAttribute("data-open", String(!isOpen));
-        trigger.setAttribute("aria-expanded", String(!isOpen));
-      });
-    });
-    document.addEventListener("click", function (e) {
-      if (!e.target.closest(".has-dropdown")) {
-        qsa(".has-dropdown").forEach(function (item) {
-          item.setAttribute("data-open", "false");
-          var t = qs(".nav-dropdown__trigger", item);
-          if (t) t.setAttribute("aria-expanded", "false");
-        });
-      }
-    });
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") {
-        qsa(".has-dropdown").forEach(function (item) {
-          item.setAttribute("data-open", "false");
-          var t = qs(".nav-dropdown__trigger", item);
-          if (t) t.setAttribute("aria-expanded", "false");
-        });
-      }
-    });
-
-    // Mobile accordion dropdowns inside the full-screen menu panel
-    qsa(".mobile-dropdown").forEach(function (item) {
-      var trigger = qs(".mobile-dropdown__trigger", item);
-      if (!trigger) return;
-      trigger.addEventListener("click", function () {
-        var isOpen = item.getAttribute("data-open") === "true";
-        item.setAttribute("data-open", String(!isOpen));
-        trigger.setAttribute("aria-expanded", String(!isOpen));
-      });
-    });
-  }
-
   document.addEventListener("DOMContentLoaded", function () {
     initHeader();
     initMobileMenu();
@@ -372,6 +322,5 @@
     initFooterYear();
     initGallery();
     initContactForm();
-    initDropdowns();
   });
 })();

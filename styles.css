@@ -542,7 +542,7 @@ section { position: relative; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 46% 42%;
+  object-position: 54% 55%;
   filter: saturate(1.08) contrast(1.05) brightness(0.95);
 }
 
@@ -1398,98 +1398,6 @@ section { position: relative; }
 }
 .nameplate__row dd a:hover,
 .ledger__copy a:hover { opacity: 0.75; }
-
-/* ---------- Desktop nav dropdown ---------- */
-.has-dropdown { position: relative; }
-.nav-dropdown__trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-.nav-dropdown__trigger .caret {
-  width: 8px; height: 8px;
-  border-right: 1.5px solid currentColor;
-  border-bottom: 1.5px solid currentColor;
-  transform: rotate(45deg) translateY(-2px);
-  transition: transform var(--dur-fast) var(--ease);
-}
-.has-dropdown[data-open="true"] .caret,
-.has-dropdown:hover .caret { transform: rotate(225deg) translateY(2px); }
-
-.nav-dropdown__menu {
-  position: absolute;
-  top: calc(100% + 14px);
-  left: 50%;
-  transform: translateX(-50%) translateY(6px);
-  min-width: 200px;
-  background: var(--bg);
-  border: 1px solid var(--line-strong);
-  box-shadow: 0 18px 40px rgba(23,23,26,0.16);
-  padding: 0.5rem;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease), visibility var(--dur-fast);
-  z-index: 50;
-}
-.nav-dropdown__menu a {
-  display: block;
-  padding: 0.7rem 0.9rem;
-  color: var(--ink) !important;
-  font-size: 0.92rem;
-  font-weight: 500;
-}
-.nav-dropdown__menu a::after { display: none !important; content: none !important; }
-.nav-dropdown__menu a:hover { background: var(--bg-raised); color: var(--red) !important; }
-
-@media (hover: hover) {
-  .has-dropdown:hover .nav-dropdown__menu {
-    opacity: 1; visibility: visible; pointer-events: auto; transform: translateX(-50%) translateY(0);
-  }
-}
-.has-dropdown[data-open="true"] .nav-dropdown__menu {
-  opacity: 1; visibility: visible; pointer-events: auto; transform: translateX(-50%) translateY(0);
-}
-
-/* ---------- Mobile nav dropdown (accordion) ---------- */
-.mobile-dropdown__trigger {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  font-family: var(--font-display);
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 2.1rem;
-  padding-block: 0.55rem;
-  border-bottom: 1px solid var(--line);
-}
-.mobile-dropdown__trigger .caret {
-  width: 12px; height: 12px;
-  border-right: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
-  transform: rotate(45deg);
-  transition: transform var(--dur-fast) var(--ease);
-  flex-shrink: 0;
-}
-.mobile-dropdown[data-open="true"] .mobile-dropdown__trigger .caret { transform: rotate(225deg); }
-.mobile-dropdown__panel {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows var(--dur-med) var(--ease);
-}
-.mobile-dropdown[data-open="true"] .mobile-dropdown__panel { grid-template-rows: 1fr; }
-.mobile-dropdown__panel-inner { overflow: hidden; }
-.mobile-dropdown__panel a {
-  display: block;
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 1.15rem;
-  text-transform: none;
-  padding: 0.7rem 0 0.7rem 1rem;
-  color: var(--ink-soft);
-  border-bottom: none;
-}
 
 /* ---------- 24-Hour Emergency Electrician split section ---------- */
 .emergency-split-grid {
