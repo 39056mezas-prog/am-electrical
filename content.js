@@ -31,7 +31,7 @@ window.AM_CONTENT = {
     shortTitle: "AM Electrical",
     description:
       "AM Electrical is a licensed Lake Forest, CA electrical contractor serving commercial, industrial and residential clients across Orange County. 37 years of experience, 24-hour emergency service, CA Lic. #681767.",
-    ogImage: "hero-panel.jpg",
+    ogImage: "og-image.jpg",
     themeColor: "#17171A",
     locale: "en_US"
   },

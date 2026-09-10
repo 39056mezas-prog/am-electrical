@@ -408,20 +408,29 @@ section { position: relative; }
   transition: opacity var(--dur-med) var(--ease);
 }
 .site-header.is-scrolled::before,
+.site-header.no-hero::before,
 .site-header.menu-open::before { opacity: 0; }
 
-/* Scrolled / solid state */
-.site-header.is-scrolled {
+/* Scrolled / solid state — also used statically (.no-hero) on pages
+   that open with a dark page-hero or no hero at all, so the header
+   never needs to render white-on-white before JS has a chance to run. */
+.site-header.is-scrolled,
+.site-header.no-hero {
   background: rgba(245, 243, 238, 0.94);
   backdrop-filter: saturate(140%) blur(10px);
   box-shadow: 0 1px 0 var(--line);
   height: 68px;
 }
-.site-header.is-scrolled .logo-light { display: none; }
-.site-header.is-scrolled .logo-dark { display: block; }
-.site-header.is-scrolled .header-phone { color: var(--ink); }
-.site-header.is-scrolled .menu-toggle { color: var(--ink); }
-.site-header.is-scrolled .site-header__nav a { color: var(--ink); }
+.site-header.is-scrolled .logo-light,
+.site-header.no-hero .logo-light { display: none; }
+.site-header.is-scrolled .logo-dark,
+.site-header.no-hero .logo-dark { display: block; }
+.site-header.is-scrolled .header-phone,
+.site-header.no-hero .header-phone { color: var(--ink); }
+.site-header.is-scrolled .menu-toggle,
+.site-header.no-hero .menu-toggle { color: var(--ink); }
+.site-header.is-scrolled .site-header__nav a,
+.site-header.no-hero .site-header__nav a { color: var(--ink); }
 
 /* Menu open state forces solid header for readability */
 .site-header.menu-open { background: var(--bg); box-shadow: none; }
@@ -533,24 +542,26 @@ section { position: relative; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 20%;
-  filter: grayscale(1) contrast(1.14) brightness(0.78);
+  object-position: 46% 42%;
+  filter: saturate(1.08) contrast(1.05) brightness(0.95);
 }
 
-/* Graphite/red duotone wash — a photographic treatment, not a filter gimmick */
+/* A light graphite/red wash ties the photo to the brand without
+   flattening it to grayscale — this hero is a real place, not
+   equipment, so it keeps its color. */
 .hero__duotone {
   position: absolute;
   inset: 0;
   z-index: 1;
   background:
-    linear-gradient(158deg, rgba(20,19,18,0.88) 6%, rgba(90,10,12,0.42) 52%, rgba(20,19,18,0.5) 100%);
+    linear-gradient(160deg, rgba(15,15,16,0.4) 0%, rgba(90,10,12,0.16) 45%, rgba(15,15,16,0.32) 100%);
   mix-blend-mode: multiply;
 }
 .hero__scrim {
   position: absolute;
   inset: 0;
   z-index: 2;
-  background: linear-gradient(0deg, rgba(15,15,16,0.92) 0%, rgba(15,15,16,0.35) 46%, rgba(15,15,16,0.18) 68%);
+  background: linear-gradient(0deg, rgba(12,12,13,0.88) 0%, rgba(12,12,13,0.32) 44%, rgba(12,12,13,0.22) 64%, rgba(12,12,13,0.3) 100%);
 }
 
 /* Signature diagonal reveal into the next section */
@@ -1105,10 +1116,13 @@ section { position: relative; }
 }
 .index-list li::before {
   content: "";
-  width: 8px; height: 8px;
-  background: var(--red);
+  width: 11px; height: 15px;
   flex-shrink: 0;
-  transform: translateY(-2px);
+  transform: translateY(-1px);
+  background-image: url("lightning-bolt-red.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 .index-list strong { font-weight: 600; }
 .index-list span { color: var(--ink-soft); }
@@ -1368,3 +1382,235 @@ section { position: relative; }
   gap: 1.5rem;
   max-width: none;
 }
+
+/* =================================================================
+   V2 ADDITIONS
+   ================================================================= */
+
+/* ---------- Inline links inside nameplates / ledger / tags ---------- */
+.nameplate__row dd a,
+.ledger__copy a,
+.contact-card dd a.inline-link {
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-underline-offset: 2px;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+.nameplate__row dd a:hover,
+.ledger__copy a:hover { opacity: 0.75; }
+
+/* ---------- Desktop nav dropdown ---------- */
+.has-dropdown { position: relative; }
+.nav-dropdown__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.nav-dropdown__trigger .caret {
+  width: 8px; height: 8px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform var(--dur-fast) var(--ease);
+}
+.has-dropdown[data-open="true"] .caret,
+.has-dropdown:hover .caret { transform: rotate(225deg) translateY(2px); }
+
+.nav-dropdown__menu {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  min-width: 200px;
+  background: var(--bg);
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 18px 40px rgba(23,23,26,0.16);
+  padding: 0.5rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease), visibility var(--dur-fast);
+  z-index: 50;
+}
+.nav-dropdown__menu a {
+  display: block;
+  padding: 0.7rem 0.9rem;
+  color: var(--ink) !important;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+.nav-dropdown__menu a::after { display: none !important; content: none !important; }
+.nav-dropdown__menu a:hover { background: var(--bg-raised); color: var(--red) !important; }
+
+@media (hover: hover) {
+  .has-dropdown:hover .nav-dropdown__menu {
+    opacity: 1; visibility: visible; pointer-events: auto; transform: translateX(-50%) translateY(0);
+  }
+}
+.has-dropdown[data-open="true"] .nav-dropdown__menu {
+  opacity: 1; visibility: visible; pointer-events: auto; transform: translateX(-50%) translateY(0);
+}
+
+/* ---------- Mobile nav dropdown (accordion) ---------- */
+.mobile-dropdown__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 2.1rem;
+  padding-block: 0.55rem;
+  border-bottom: 1px solid var(--line);
+}
+.mobile-dropdown__trigger .caret {
+  width: 12px; height: 12px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform var(--dur-fast) var(--ease);
+  flex-shrink: 0;
+}
+.mobile-dropdown[data-open="true"] .mobile-dropdown__trigger .caret { transform: rotate(225deg); }
+.mobile-dropdown__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-med) var(--ease);
+}
+.mobile-dropdown[data-open="true"] .mobile-dropdown__panel { grid-template-rows: 1fr; }
+.mobile-dropdown__panel-inner { overflow: hidden; }
+.mobile-dropdown__panel a {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 1.15rem;
+  text-transform: none;
+  padding: 0.7rem 0 0.7rem 1rem;
+  color: var(--ink-soft);
+  border-bottom: none;
+}
+
+/* ---------- 24-Hour Emergency Electrician split section ---------- */
+.emergency-split-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.4rem;
+  margin-top: 2.2rem;
+}
+@media (min-width: 760px) {
+  .emergency-split-grid { grid-template-columns: 1fr 1fr; gap: 1.8rem; }
+}
+.emergency-split-card {
+  border: 1px solid var(--line-strong);
+  background: var(--white);
+  padding: clamp(1.5rem, 2.5vw, 2.2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.emergency-split-card__tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+.emergency-split-card h3 { font-size: clamp(1.3rem, 1.4vw + 0.9rem, 1.8rem); }
+.emergency-split-card p { color: var(--ink-soft); }
+.emergency-split-card .btn { align-self: flex-start; margin-top: 0.3rem; }
+
+/* ---------- Payment methods ---------- */
+.payment-section { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.payment-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.6rem;
+  margin-top: 1.6rem;
+}
+.payment-row img, .payment-row svg {
+  height: 38px;
+  width: auto;
+  display: block;
+}
+.payment-row .payment-other {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  padding-left: 1.2rem;
+  border-left: 1px solid var(--line-strong);
+  flex-wrap: wrap;
+}
+@media (max-width: 480px) {
+  .payment-row .payment-other { border-left: none; padding-left: 0; }
+}
+
+/* ---------- Footer citations (local directory links) ---------- */
+.footer-citations {
+  border-top: 1px solid var(--on-dark-line);
+  padding-block: 1.6rem;
+}
+.footer-citations__label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--on-dark-soft);
+  margin-bottom: 0.9rem;
+}
+.footer-citations__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+}
+.footer-citations__links a { color: var(--on-dark-soft); font-size: 0.86rem; }
+.footer-citations__links a:hover { color: var(--white); }
+
+/* ---------- Footer logo as a link ---------- */
+.footer-brand__logo-link { display: inline-block; }
+.footer-brand__logo-link img { transition: opacity var(--dur-fast) var(--ease); }
+.footer-brand__logo-link:hover img { opacity: 0.85; }
+
+/* ---------- Secondary page hero (residential / commercial / bonded & insured) ---------- */
+.page-hero {
+  position: relative;
+  padding-top: calc(var(--header-h) + clamp(56px, 9vw, 96px));
+  padding-bottom: clamp(48px, 7vw, 80px);
+  background: var(--ink);
+  color: var(--on-dark);
+  overflow: hidden;
+}
+.page-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(90deg, var(--on-dark-line) 1px, transparent 1px),
+    linear-gradient(0deg, var(--on-dark-line) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity: 0.5;
+  mask-image: radial-gradient(ellipse at top left, black, transparent 75%);
+}
+.page-hero__inner { position: relative; z-index: 1; }
+.page-hero .breadcrumbs { margin-bottom: 1.4rem; }
+.page-hero .breadcrumbs a { color: var(--on-dark-soft); }
+.page-hero .breadcrumbs a:hover { color: var(--white); }
+.page-hero .breadcrumbs span[aria-hidden] { color: var(--on-dark-soft); margin: 0 0.4rem; }
+.page-hero h1 { color: var(--white); max-width: 18ch; }
+.page-hero .lede { color: var(--on-dark-soft); margin-top: 1.1rem; max-width: 46ch; }
+
+.breadcrumbs-light { margin-bottom: 1.2rem; font-size: 0.86rem; }
+.breadcrumbs-light a { color: var(--ink-faint); }
+.breadcrumbs-light a:hover { color: var(--red); }
+.breadcrumbs-light span[aria-hidden] { color: var(--ink-faint); margin: 0 0.4rem; }
+
+.page-cta-band {
+  background: var(--red);
+  color: var(--white);
+  padding-block: clamp(48px, 6vw, 72px);
+  text-align: center;
+}
+.page-cta-band h2 { color: var(--white); }
+.page-cta-band p { color: rgba(255,255,255,0.9); margin: 1rem auto 1.6rem; max-width: 46ch; }
+.page-cta-band .btn-row { justify-content: center; }

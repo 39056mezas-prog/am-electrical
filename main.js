@@ -113,19 +113,24 @@
      --------------------------------------------------------------- */
   function initMobileEmergencyBar() {
     var bar = qs("#mobile-emergency-bar");
-    var hero = qs(".hero");
+    // Full hero (homepage) or the shorter page-hero (secondary pages) —
+    // pages with neither (e.g. privacy.html) have nothing to scroll
+    // past, so the bar can appear right away.
+    var hero = qs(".hero") || qs(".page-hero");
     var footer = qs(".site-footer");
-    if (!bar || !hero) return;
+    if (!bar) return;
 
-    var pastHero = false;
+    var pastHero = !hero;
     var overFooter = false;
     function refresh() { bar.classList.toggle("is-visible", pastHero && !overFooter); }
 
     if ("IntersectionObserver" in window) {
-      new IntersectionObserver(function (entries) {
-        pastHero = !entries[0].isIntersecting;
-        refresh();
-      }, { rootMargin: "-90% 0px 0px 0px" }).observe(hero);
+      if (hero) {
+        new IntersectionObserver(function (entries) {
+          pastHero = !entries[0].isIntersecting;
+          refresh();
+        }, { rootMargin: "-90% 0px 0px 0px" }).observe(hero);
+      }
 
       if (footer) {
         new IntersectionObserver(function (entries) {
@@ -133,6 +138,7 @@
           refresh();
         }, { rootMargin: "0px" }).observe(footer);
       }
+      refresh();
     } else {
       bar.classList.add("is-visible");
     }
@@ -307,6 +313,56 @@
   /* ---------------------------------------------------------------
      Boot
      --------------------------------------------------------------- */
+  /* ---------------------------------------------------------------
+     Nav dropdowns (desktop click/keyboard + mobile accordion)
+     --------------------------------------------------------------- */
+  function initDropdowns() {
+    // Desktop dropdowns: hover is handled purely in CSS; this adds
+    // click/tap + keyboard support and outside-click / Escape close.
+    qsa(".has-dropdown").forEach(function (item) {
+      var trigger = qs(".nav-dropdown__trigger", item);
+      var menu = qs(".nav-dropdown__menu", item);
+      if (!trigger || !menu) return;
+
+      trigger.addEventListener("click", function (e) {
+        e.preventDefault();
+        var isOpen = item.getAttribute("data-open") === "true";
+        qsa(".has-dropdown").forEach(function (other) { other.setAttribute("data-open", "false"); });
+        item.setAttribute("data-open", String(!isOpen));
+        trigger.setAttribute("aria-expanded", String(!isOpen));
+      });
+    });
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest(".has-dropdown")) {
+        qsa(".has-dropdown").forEach(function (item) {
+          item.setAttribute("data-open", "false");
+          var t = qs(".nav-dropdown__trigger", item);
+          if (t) t.setAttribute("aria-expanded", "false");
+        });
+      }
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        qsa(".has-dropdown").forEach(function (item) {
+          item.setAttribute("data-open", "false");
+          var t = qs(".nav-dropdown__trigger", item);
+          if (t) t.setAttribute("aria-expanded", "false");
+        });
+      }
+    });
+
+    // Mobile accordion dropdowns inside the full-screen menu panel
+    qsa(".mobile-dropdown").forEach(function (item) {
+      var trigger = qs(".mobile-dropdown__trigger", item);
+      if (!trigger) return;
+      trigger.addEventListener("click", function () {
+        var isOpen = item.getAttribute("data-open") === "true";
+        item.setAttribute("data-open", String(!isOpen));
+        trigger.setAttribute("aria-expanded", String(!isOpen));
+      });
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initHeader();
     initMobileMenu();
@@ -316,5 +372,6 @@
     initFooterYear();
     initGallery();
     initContactForm();
+    initDropdowns();
   });
 })();
