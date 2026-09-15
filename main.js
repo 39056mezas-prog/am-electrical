@@ -13,16 +13,18 @@
   function initHeader() {
     var header = qs(".site-header");
     if (!header) return;
-    var ticking = false;
 
-    function update() {
+    if ("IntersectionObserver" in window) {
+      var sentinel = document.createElement("div");
+      sentinel.setAttribute("aria-hidden", "true");
+      sentinel.style.cssText = "position:absolute;top:40px;left:0;width:1px;height:1px;pointer-events:none;";
+      document.body.prepend(sentinel);
+      new IntersectionObserver(function (entries) {
+        header.classList.toggle("is-scrolled", !entries[0].isIntersecting);
+      }).observe(sentinel);
+    } else {
       header.classList.toggle("is-scrolled", window.scrollY > 40);
-      ticking = false;
     }
-    window.addEventListener("scroll", function () {
-      if (!ticking) { window.requestAnimationFrame(update); ticking = true; }
-    }, { passive: true });
-    update();
   }
 
   /* ---------------------------------------------------------------
@@ -36,7 +38,7 @@
     if (!toggle || !panel) return;
 
     // The persistent emergency bar sits behind the full-screen menu
-    // panel visually (lower z-index) but stays in the DOM — without
+    // panel visually (lower z-index) but stays in the DOM, without
     // this it would still be reachable by keyboard while hidden.
     function setBehindPanelFocusable(focusable) {
       if (!emergencyBar) return;
@@ -80,40 +82,51 @@
   }
 
   /* ---------------------------------------------------------------
-     Hero parallax + scale (signature scroll moment)
+     Hero parallax + scale (signature scroll moment).
+     Implemented entirely in CSS via scroll-driven animations
+     (animation-timeline: scroll()), see styles.css. No scroll
+     listener needed here, this function only handles the fallback
+     for browsers without CSS scroll-timeline support, and even then
+     it only runs a rAF loop while the hero is actually on screen
+     (gated by IntersectionObserver), never a bare scroll listener.
      --------------------------------------------------------------- */
   function initHeroParallax() {
+    if (CSS && CSS.supports && CSS.supports("animation-timeline: scroll()")) return;
     var hero = qs(".hero");
     var media = qs(".hero__media", hero);
-    if (!hero || !media || prefersReducedMotion) return;
+    if (!hero || !media || prefersReducedMotion || !("IntersectionObserver" in window)) return;
 
-    var ticking = false;
     var heroHeight = hero.offsetHeight;
+    var rafId = null;
 
-    function update() {
+    function tick() {
       var y = window.scrollY;
-      if (y < heroHeight * 1.15) {
-        var progress = Math.min(y / heroHeight, 1);
-        var translate = progress * heroHeight * 0.22;
-        var scale = 1 + progress * 0.08;
-        media.style.transform = "translate3d(0," + translate + "px,0) scale(" + scale + ")";
-      }
-      ticking = false;
+      var progress = Math.min(Math.max(y / heroHeight, 0), 1);
+      var translate = progress * heroHeight * 0.22;
+      var scale = 1 + progress * 0.08;
+      media.style.transform = "translate3d(0," + translate + "px,0) scale(" + scale + ")";
+      rafId = window.requestAnimationFrame(tick);
     }
-    window.addEventListener("scroll", function () {
-      if (!ticking) { window.requestAnimationFrame(update); ticking = true; }
-    }, { passive: true });
+
+    new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) {
+        if (rafId === null) rafId = window.requestAnimationFrame(tick);
+      } else if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    }).observe(hero);
+
     window.addEventListener("resize", function () { heroHeight = hero.offsetHeight; }, { passive: true });
-    update();
   }
 
   /* ---------------------------------------------------------------
-     Persistent mobile emergency CTA — show once past the hero,
+     Persistent mobile emergency CTA, show once past the hero,
      hide again once the footer is reachable.
      --------------------------------------------------------------- */
   function initMobileEmergencyBar() {
     var bar = qs("#mobile-emergency-bar");
-    // Full hero (homepage) or the shorter page-hero (secondary pages) —
+    // Full hero (homepage) or the shorter page-hero (secondary pages) ,
     // pages with neither (e.g. privacy.html) have nothing to scroll
     // past, so the bar can appear right away.
     var hero = qs(".hero") || qs(".page-hero");
@@ -145,7 +158,7 @@
   }
 
   /* ---------------------------------------------------------------
-     Capability accordion — behavior only; rows are already in the
+     Capability accordion, behavior only; rows are already in the
      markup for SEO/no-JS readability, this just wires the toggle.
      --------------------------------------------------------------- */
   function initCapabilityAccordion() {
@@ -160,6 +173,40 @@
   }
 
   /* ---------------------------------------------------------------
+     Scroll reveal: section-level fade/rise as content enters the
+     viewport. IntersectionObserver only, no scroll listener, fully
+     skipped for prefers-reduced-motion. Motivated by hierarchy: it
+     paces the page instead of dumping the whole section at once.
+     --------------------------------------------------------------- */
+  function initScrollReveal() {
+    if (prefersReducedMotion || !("IntersectionObserver" in window)) return;
+    var targets = qsa(
+      ".section-pad, .section-pad-sm, .emergency-band, .page-cta-band, .emergency-split-card, .gallery-item"
+    );
+    if (!targets.length) return;
+
+    var io = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.14, rootMargin: "0px 0px -8% 0px" }
+    );
+
+    targets.forEach(function (el, i) {
+      el.classList.add("reveal");
+      if (el.classList.contains("emergency-split-card") || el.classList.contains("gallery-item")) {
+        el.style.transitionDelay = (i % 4) * 60 + "ms";
+      }
+      io.observe(el);
+    });
+  }
+
+  /* ---------------------------------------------------------------
      Footer year
      --------------------------------------------------------------- */
   function initFooterYear() {
@@ -169,7 +216,7 @@
 
   /* ---------------------------------------------------------------
      Contact form: validate + open a pre-filled email
-     (no backend on a static site — this is a real, working submit path)
+     (no backend on a static site, this is a real, working submit path)
      --------------------------------------------------------------- */
   function initContactForm() {
     var form = qs("#contact-form");
@@ -181,7 +228,7 @@
       if (!form.checkValidity()) { form.reportValidity(); return; }
 
       var data = new FormData(form);
-      var subject = "Service request \u2014 " + (data.get("serviceType") || "General") + " (" + (data.get("propertyType") || "n/a") + ")";
+      var subject = "Service request: " + (data.get("serviceType") || "General") + " (" + (data.get("propertyType") || "n/a") + ")";
       var bodyLines = [
         "Name: " + data.get("name"),
         "Phone: " + data.get("phone"),
@@ -205,7 +252,7 @@
   }
 
   /* ---------------------------------------------------------------
-     Gallery + lightbox — genuinely data-driven from content.js
+     Gallery + lightbox, genuinely data-driven from content.js
      --------------------------------------------------------------- */
   function initGallery() {
     var grid = qs("#gallery-grid");
@@ -234,7 +281,7 @@
       var meta = document.createElement("div");
       meta.className = "gallery-item__meta";
       meta.innerHTML =
-        '<span class="gallery-item__cat">' + item.category + " \u2014 " + item.location + "</span>" +
+        '<span class="gallery-item__cat">' + item.category + ", " + item.location + "</span>" +
         '<span class="gallery-item__type">' + item.type + "</span>";
 
       btn.appendChild(img);
@@ -259,7 +306,7 @@
       var item = items[i];
       lbImg.src = item.full;
       lbImg.alt = item.alt;
-      lbCatType.textContent = item.category + " \u2014 " + item.type;
+      lbCatType.textContent = item.category + ", " + item.type;
       lbLocation.textContent = item.location;
       lbCounter.textContent = (i + 1) + " / " + items.length;
     }
@@ -322,5 +369,6 @@
     initFooterYear();
     initGallery();
     initContactForm();
+    initScrollReveal();
   });
 })();

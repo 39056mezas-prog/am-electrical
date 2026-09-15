@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.amelectrical.com/sitemap.xml
+Sitemap: https://www.am-electrical.net/sitemap.xml

@@ -1,5 +1,5 @@
 /**
- * AM ELECTRICAL — SITE CONTENT
+ * AM ELECTRICAL - SITE CONTENT
  * ----------------------------------------------------------------
  * Reference config + the one section that's genuinely data-driven
  * at runtime.
@@ -11,7 +11,7 @@
  * Everything else here (nav, capabilities, serviceIndex, rail,
  * residential index, whyPoints, serviceArea, form options) documents
  * the canonical copy that's written directly into index.html for
- * SEO and no-JS reliability — nav links, NAP details (name/address/
+ * SEO and no-JS reliability: nav links, NAP details (name/address/
  * phone), and keyword-relevant section content should be crawlable
  * without depending on script execution. If you change one of those
  * values, update it in BOTH places: here, and in index.html.
@@ -24,9 +24,9 @@
 window.AM_CONTENT = {
 
   site: {
-    // PLACEHOLDER — set this to the live domain before launch.
+    // PLACEHOLDER: set this to the live domain before launch.
     // Every canonical / OG / sitemap URL below is built from this.
-    url: "https://www.amelectrical.com",
+    url: "https://www.am-electrical.net",
     title: "Electrician Lake Forest CA | Commercial, Industrial & Residential | AM Electrical",
     shortTitle: "AM Electrical",
     description:
@@ -54,7 +54,7 @@ window.AM_CONTENT = {
     },
     hours: "24-Hour Emergency Service",
     mission:
-      "For 37 years, AM Electrical has powered homes, businesses and industrial facilities across Orange County with electrical work built on integrity, precision and experience. We provide 24-hour emergency response, upfront pricing and flexible scheduling — because your time and safety matter. Fully licensed and insured, we take on every project, from the smallest repair to the largest installation, with the same attention to detail."
+      "For 37 years, AM Electrical has powered homes, businesses and industrial facilities across Orange County with electrical work built on integrity, precision and experience. We provide 24-hour emergency response, upfront pricing and flexible scheduling, because your time and safety matter. Fully licensed and insured, we take on every project, from the smallest repair to the largest installation, with the same attention to detail."
   },
 
   nav: [
@@ -66,32 +66,32 @@ window.AM_CONTENT = {
     { label: "Contact", href: "#contact" }
   ],
 
-  // Primary capability categories — rendered as the numbered index.
+  // Primary capability categories, rendered as the numbered index.
   capabilities: [
     {
       number: "01",
       name: "Commercial",
       id: "commercial",
       summary:
-        "Offices, retail and multi-tenant properties — supported with reliable electrical service, scheduled maintenance and new installation work."
+        "Offices, retail and multi-tenant properties, supported with reliable electrical service, scheduled maintenance and new installation work."
     },
     {
       number: "02",
       name: "Industrial",
       id: "industrial",
       summary:
-        "Industrial and manufacturing facilities — supported with reliable electrical service, scheduled maintenance and new installation work."
+        "Industrial and manufacturing facilities, supported with reliable electrical service, scheduled maintenance and new installation work."
     },
     {
       number: "03",
       name: "Residential",
       id: "residential-cap",
       summary:
-        "Homes throughout the area — supported with reliable electrical service, scheduled maintenance and new installation work, from small repairs to full builds."
+        "Homes throughout the area, supported with reliable electrical service, scheduled maintenance and new installation work, from small repairs to full builds."
     }
   ],
 
-  // Secondary service index — applies across all three categories above.
+  // Secondary service index, applies across all three categories above.
   serviceIndex: ["Service", "Maintenance", "Installation", "Troubleshooting", "Emergency"],
 
   // Rail list for the Commercial + Industrial dark feature section.
@@ -108,7 +108,7 @@ window.AM_CONTENT = {
 
   // Field work / project gallery. Data-driven so images can be swapped
   // or added without touching markup. Location/category fields are
-  // PLACEHOLDERS — replace with exact job-site details as available.
+  // PLACEHOLDERS: replace with exact job-site details as available.
   gallery: [
     {
       id: "panel",
@@ -117,7 +117,7 @@ window.AM_CONTENT = {
       width: 981,
       height: 1573,
       category: "Commercial",
-      location: "Orange County, CA", // PLACEHOLDER — exact city
+      location: "Orange County, CA", // PLACEHOLDER: exact city
       type: "Panel Service",
       alt: "Open commercial electrical distribution panel with breaker rows, serviced by AM Electrical",
       span: "tall"
@@ -178,7 +178,7 @@ window.AM_CONTENT = {
       height: 576,
       category: "Residential",
       location: "Orange County, CA", // PLACEHOLDER
-      type: "Accent Lighting — Detail",
+      type: "Accent Lighting, Detail",
       alt: "Close-up detail of LED accent lighting beneath a floating shelf",
       span: "wide"
     }
@@ -191,7 +191,7 @@ window.AM_CONTENT = {
     },
     {
       label: "Response",
-      copy: "24-hour emergency service — electrical problems don't keep business hours, and we don't either."
+      copy: "24-hour emergency service: electrical problems don't keep business hours, and we don't either."
     },
     {
       label: "Pricing",
@@ -214,7 +214,7 @@ window.AM_CONTENT = {
   serviceArea: {
     primary: "Lake Forest, CA",
     region: "Orange County & Southern California",
-    // PLACEHOLDER list — confirm before publishing which of these are
+    // PLACEHOLDER list: confirm before publishing which of these are
     // actively served, and expand into dedicated city pages later.
     cities: [
       "Lake Forest",
