@@ -72,22 +72,29 @@
 
 /* ---------- Tokens ---------- */
 :root {
-  /* Color */
-  --bg: #F5F3EE;
-  --bg-raised: #ECE7DD;
-  --bg-raised-2: #E3DDD0;
-  --ink: #17171A;
-  --ink-soft: #55524C;
-  --ink-faint: #69655F;
-  --line: rgba(23, 23, 26, 0.13);
-  --line-strong: rgba(23, 23, 26, 0.22);
+  /* Color: dark mode, canvas plus three elevations, warm off-white ink,
+     brand red held as an accent (not a wash), with a brightened
+     text-safe red for the rare cases red carries small copy. */
+  --bg-deep: #0C0C0E;      /* deepest anchor: hero, footer, page-hero, bg-dark */
+  --bg: #17171A;           /* main canvas (the site's original signature dark) */
+  --bg-raised: #201E20;    /* first elevation: alternating sections */
+  --bg-raised-2: #2B282B;  /* second elevation: cards, chips, inputs' container */
+  --ink: #F3F1EA;          /* primary text, warm off-white */
+  --ink-soft: rgba(243, 241, 234, 0.72);
+  --ink-faint: rgba(243, 241, 234, 0.52);
+  --line: rgba(243, 241, 234, 0.14);
+  --line-strong: rgba(243, 241, 234, 0.26);
   --white: #FFFFFF;
   --red: #D9010D;
+  --red-text: #FF4433;     /* brightened variant for red used as small text on dark, 4.5:1+ */
   --red-deep: #A5000A;
-  --red-tint: rgba(217, 1, 13, 0.08);
-  --on-dark: #F3F1EA;
-  --on-dark-soft: rgba(243, 241, 234, 0.68);
-  --on-dark-line: rgba(243, 241, 234, 0.16);
+  --red-tint: rgba(217, 1, 13, 0.14);
+  /* Aliases: earlier "on-dark" tokens existed for the few sections that
+     were dark against a light site. Now the whole site is dark, so these
+     simply point at the same roles above rather than duplicating values. */
+  --on-dark: var(--ink);
+  --on-dark-soft: var(--ink-soft);
+  --on-dark-line: var(--line);
 
   /* Type */
   --font-display: "Big Shoulders Display", "Arial Narrow", sans-serif;
@@ -108,6 +115,15 @@
   --dur-med: 320ms;
   --dur-slow: 620ms;
 }
+
+/* Browser surfaces: theme selection, caret and scrollbar from the
+   palette rather than leaving OS defaults on a fully dark canvas. */
+::selection { background: var(--red); color: var(--white); }
+:root { scrollbar-color: var(--bg-raised-2) var(--bg); scrollbar-width: thin; }
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--bg-raised-2); border: 3px solid var(--bg); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--line-strong); }
 
 /* ---------- Reset ---------- */
 *, *::before, *::after { box-sizing: border-box; }
@@ -195,7 +211,7 @@ p.wide { max-width: none; }
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--red);
+  color: var(--red-text);
 }
 .eyebrow__bottom {
   font-size: 0.92rem;
@@ -217,7 +233,7 @@ section { position: relative; }
 .section-pad { padding-block: clamp(64px, 9vw, 128px); }
 .section-pad-sm { padding-block: clamp(40px, 5vw, 72px); }
 
-.bg-dark { background: var(--ink); color: var(--on-dark); }
+.bg-dark { background: var(--bg-deep); color: var(--on-dark); }
 .bg-raised { background: var(--bg-raised); }
 
 .rule {
@@ -240,7 +256,7 @@ section { position: relative; }
 .skip-link {
   position: absolute;
   left: 1rem; top: -60px;
-  background: var(--ink);
+  background: var(--bg-deep);
   color: var(--on-dark);
   padding: 0.8rem 1.2rem;
   z-index: 1000;
@@ -421,28 +437,25 @@ section { position: relative; }
    never needs to render white-on-white before JS has a chance to run. */
 .site-header.is-scrolled,
 .site-header.no-hero {
-  background: rgba(245, 243, 238, 0.94);
+  background: rgba(23, 23, 26, 0.88);
   backdrop-filter: saturate(140%) blur(10px);
   box-shadow: 0 1px 0 var(--line);
   height: 68px;
 }
-.site-header.is-scrolled .logo-light,
-.site-header.no-hero .logo-light { display: none; }
-.site-header.is-scrolled .logo-dark,
-.site-header.no-hero .logo-dark { display: block; }
+/* Every header state is now a dark surface, so the white logo stays
+   visible throughout; the dark logo variant is unused but kept in
+   markup in case a future light section needs it back. */
 .site-header.is-scrolled .header-phone,
-.site-header.no-hero .header-phone { color: var(--ink); }
+.site-header.no-hero .header-phone { color: var(--white); }
 .site-header.is-scrolled .menu-toggle,
-.site-header.no-hero .menu-toggle { color: var(--ink); }
+.site-header.no-hero .menu-toggle { color: var(--white); }
 .site-header.is-scrolled .site-header__nav a,
-.site-header.no-hero .site-header__nav a { color: var(--ink); }
+.site-header.no-hero .site-header__nav a { color: var(--white); }
 
 /* Menu open state forces solid header for readability */
 .site-header.menu-open { background: var(--bg); box-shadow: none; }
-.site-header.menu-open .logo-light { display: none; }
-.site-header.menu-open .logo-dark { display: block; }
 .site-header.menu-open .header-phone,
-.site-header.menu-open .menu-toggle { color: var(--ink); }
+.site-header.menu-open .menu-toggle { color: var(--white); }
 
 @media (min-width: 1040px) {
   .site-header__nav {
@@ -518,7 +531,7 @@ section { position: relative; }
   font-family: var(--font-mono);
   font-size: 1.15rem;
   font-weight: 600;
-  color: var(--red);
+  color: var(--red-text);
 }
 @media (min-width: 1040px) {
   .mobile-menu { display: none; }
@@ -540,7 +553,7 @@ section { position: relative; }
   grid-template-rows: 1fr;
   min-height: 100svh;
   overflow: hidden;
-  background: var(--ink);
+  background: var(--bg-deep);
   isolation: isolate;
 }
 
@@ -588,20 +601,72 @@ section { position: relative; }
   }
 }
 
-/* Dark red brand wash over the photo, this is a real place, so it
-   keeps its color underneath, but the overlay itself now reads
-   clearly as "dark red" rather than a neutral graphite tint. */
+/* Punk gig-poster treatment: high-contrast graphite duotone (not a
+   red wash) + halftone/grain texture for a screen-printed feel, plus
+   a bold bolt graphic as the one red accent, echoing the bolts in
+   the AM Electrical mark itself. Red stays a sharp accent here, not
+   a tint, consistent with the single-accent rule used everywhere
+   else on the site. */
 .hero__duotone {
   grid-area: 1 / 1;
   z-index: 1;
   background:
-    linear-gradient(165deg, rgba(64,5,7,0.4) 0%, rgba(96,8,10,0.26) 45%, rgba(50,4,6,0.42) 100%);
+    linear-gradient(165deg, rgba(10,10,11,0.58) 0%, rgba(10,10,11,0.18) 45%, rgba(10,10,11,0.6) 100%);
   mix-blend-mode: multiply;
 }
-.hero__scrim {
+
+/* Fine grain, screen-print noise rather than a clean digital gradient */
+.hero__grain {
   grid-area: 1 / 1;
   z-index: 2;
-  background: linear-gradient(0deg, rgba(36,3,5,0.6) 0%, rgba(36,3,5,0.26) 40%, rgba(36,3,5,0.16) 62%, rgba(36,3,5,0.28) 100%);
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* Halftone dot fade toward the bottom, like ink running low on a
+   press run, reinforces the diagonal reveal below it. */
+.hero__halftone {
+  grid-area: 1 / 1;
+  z-index: 3;
+  opacity: 0.16;
+  mix-blend-mode: multiply;
+  background-image: radial-gradient(#0A0A0B 42%, transparent 44%);
+  background-size: 5px 5px;
+  -webkit-mask-image: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 55%);
+          mask-image: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 55%);
+}
+
+.hero__scrim {
+  grid-area: 1 / 1;
+  z-index: 4;
+  background: linear-gradient(0deg, rgba(10,10,11,0.72) 0%, rgba(10,10,11,0.3) 40%, rgba(10,10,11,0.16) 62%, rgba(10,10,11,0.3) 100%);
+}
+
+/* Signature bolt, bleeds off the right edge, sharp die-cut shadow.
+   The one red accent in the whole treatment, doing more work by
+   doing less of it. */
+.hero__bolt {
+  grid-area: 1 / 1;
+  z-index: 5;
+  position: relative;
+  pointer-events: none;
+}
+.hero__bolt svg {
+  position: absolute;
+  right: -3%;
+  top: 9%;
+  height: 27%;
+  width: auto;
+  filter: drop-shadow(-8px 8px 0 rgba(10,10,11,0.5));
+}
+@media (max-width: 1039px) {
+  /* Edge-tab is hidden below 1040px, bolt can safely run taller */
+  .hero__bolt svg { top: auto; bottom: -6%; height: 46%; }
+}
+@media (max-width: 720px) {
+  .hero__bolt svg { height: 34%; right: -8%; opacity: 0.85; }
 }
 
 /* Signature diagonal reveal into the next section */
@@ -613,7 +678,7 @@ section { position: relative; }
   min-height: 90px;
   max-height: 190px;
   margin-bottom: -2px;
-  z-index: 3;
+  z-index: 6;
   background: var(--bg);
   clip-path: polygon(0 100%, 100% 40%, 100% 100%);
 }
@@ -621,7 +686,7 @@ section { position: relative; }
 .hero__content {
   grid-area: 1 / 1;
   align-self: end;
-  z-index: 4;
+  z-index: 7;
   width: 100%;
   padding-bottom: clamp(70px, 10vw, 130px);
   padding-top: calc(var(--header-h) + 2rem);
@@ -690,7 +755,7 @@ section { position: relative; }
 /* Light variant used later in the page (37-years section) */
 .nameplate--light {
   border-color: var(--line-strong);
-  background: var(--white);
+  background: var(--bg-raised-2);
   backdrop-filter: none;
 }
 .nameplate--light .nameplate__head { color: var(--ink-faint); border-bottom-color: var(--line); }
@@ -828,7 +893,7 @@ section { position: relative; }
 .cap-row__num {
   font-family: var(--font-mono);
   font-size: 1rem;
-  color: var(--red);
+  color: var(--red-text);
   font-weight: 600;
 }
 .cap-row__name {
@@ -838,7 +903,7 @@ section { position: relative; }
   font-size: clamp(1.4rem, 1.8vw + 0.9rem, 2.4rem);
   transition: color var(--dur-fast) var(--ease);
 }
-.cap-row__trigger:hover .cap-row__name { color: var(--red); }
+.cap-row__trigger:hover .cap-row__name { color: var(--red-text); }
 
 .cap-row__icon {
   position: relative;
@@ -911,7 +976,7 @@ section { position: relative; }
   font-weight: 800;
   text-transform: uppercase;
   font-size: clamp(1.4rem, 2vw, 2rem);
-  color: var(--red);
+  color: var(--red-text);
   letter-spacing: 0.02em;
   margin-top: 0.2rem;
 }
@@ -1002,7 +1067,7 @@ section { position: relative; }
   font-size: 0.68rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--red);
+  color: var(--red-text);
   display: block;
 }
 .gallery-item__type { font-size: 0.85rem; font-weight: 600; }
@@ -1126,7 +1191,7 @@ section { position: relative; }
   border-bottom: 1px solid var(--on-dark-line);
   font-family: var(--font-mono);
 }
-.rail__row .rail__num { color: var(--red); font-size: 0.85rem; font-weight: 600; }
+.rail__row .rail__num { color: var(--red-text); font-size: 0.85rem; font-weight: 600; }
 .rail__row .rail__name {
   flex: 1;
   margin-left: 1rem;
@@ -1231,8 +1296,8 @@ section { position: relative; }
 }
 
 .area-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.6rem; }
-.area-tags .tag { background: var(--white); }
-.area-tags .tag--primary { border-color: var(--red); color: var(--red); }
+.area-tags .tag { background: var(--bg-raised-2); }
+.area-tags .tag--primary { border-color: var(--red); color: var(--red-text); }
 
 .radius-diagram { width: 100%; height: auto; }
 .radius-diagram .ring { fill: none; stroke: var(--line-strong); stroke-dasharray: 4 5; }
@@ -1264,7 +1329,7 @@ section { position: relative; }
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-md);
   padding: clamp(1.6rem, 2.5vw, 2.4rem);
-  background: var(--white);
+  background: var(--bg-raised-2);
 }
 .contact-card__name { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; font-size: 1.6rem; }
 .contact-card__owner { color: var(--ink-soft); margin-top: 0.2rem; }
@@ -1279,9 +1344,9 @@ section { position: relative; }
   color: var(--ink-faint);
 }
 .contact-card dd { font-weight: 600; font-size: 1.05rem; }
-.contact-card dd a:hover { color: var(--red); }
+.contact-card dd a:hover { color: var(--red-text); }
 .contact-card .row--emergency { background: var(--red-tint); margin-inline: -1.2rem; padding-inline: 1.2rem; border-top-color: transparent; border-bottom: 1px solid transparent; }
-.contact-card .row--emergency dt { color: var(--red); }
+.contact-card .row--emergency dt { color: var(--red-text); }
 .contact-card .row--emergency dd { color: var(--red-deep); font-family: var(--font-mono); }
 
 .form-grid {
@@ -1302,14 +1367,14 @@ section { position: relative; }
   text-transform: uppercase;
   color: var(--ink-soft);
 }
-.form-field label .req { color: var(--red); }
+.form-field label .req { color: var(--red-text); }
 
 .form-field input,
 .form-field select,
 .form-field textarea {
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
-  background: var(--white);
+  background: var(--bg);
   padding: 0.85rem 1rem;
   font-size: 1rem;
   color: var(--ink);
@@ -1352,7 +1417,7 @@ section { position: relative; }
    FOOTER
    ================================================================= */
 .site-footer {
-  background: var(--ink);
+  background: var(--bg-deep);
   color: var(--on-dark);
   padding-top: clamp(56px, 7vw, 96px);
 }
@@ -1383,7 +1448,7 @@ section { position: relative; }
   font-weight: 600;
 }
 .footer-col ul { display: flex; flex-direction: column; gap: 0.65rem; }
-.footer-col a:hover { color: var(--red); }
+.footer-col a:hover { color: var(--red-text); }
 .footer-col address { font-style: normal; color: var(--on-dark-soft); line-height: 1.6; }
 
 .footer-emergency {
@@ -1393,7 +1458,7 @@ section { position: relative; }
   margin-top: 1rem;
   font-family: var(--font-mono);
   font-weight: 600;
-  color: var(--red);
+  color: var(--red-text);
 }
 
 .footer-bottom {
@@ -1476,7 +1541,7 @@ section { position: relative; }
 .emergency-split-card {
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-md);
-  background: var(--white);
+  background: var(--bg-raised-2);
   padding: clamp(1.5rem, 2.5vw, 2.2rem);
   display: flex;
   flex-direction: column;
@@ -1487,7 +1552,7 @@ section { position: relative; }
   font-size: 0.72rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--red);
+  color: var(--red-text);
 }
 .emergency-split-card h3 { font-size: clamp(1.3rem, 1.4vw + 0.9rem, 1.8rem); }
 .emergency-split-card p { color: var(--ink-soft); }
@@ -1508,7 +1573,7 @@ section { position: relative; }
   justify-content: center;
   height: 56px;
   padding-inline: 1.1rem;
-  background: var(--white);
+  background: var(--bg-raised-2);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   transition: border-color var(--dur-fast) var(--ease), transform var(--dur-med) var(--ease-spring);
@@ -1558,7 +1623,7 @@ section { position: relative; }
   position: relative;
   padding-top: calc(var(--header-h) + clamp(56px, 9vw, 96px));
   padding-bottom: clamp(48px, 7vw, 80px);
-  background: var(--ink);
+  background: var(--bg-deep);
   color: var(--on-dark);
   overflow: hidden;
 }
@@ -1619,7 +1684,7 @@ section { position: relative; }
 
 .breadcrumbs-light { margin-bottom: 1.2rem; font-size: 0.86rem; }
 .breadcrumbs-light a { color: var(--ink-faint); }
-.breadcrumbs-light a:hover { color: var(--red); }
+.breadcrumbs-light a:hover { color: var(--red-text); }
 .breadcrumbs-light span[aria-hidden] { color: var(--ink-faint); margin: 0 0.4rem; }
 
 .page-cta-band {
