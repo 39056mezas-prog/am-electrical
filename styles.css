@@ -107,13 +107,19 @@
   --radius-sm: 2px;
   --radius-md: 6px;
   --header-h: 84px;
-
   /* Motion */
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --dur-fast: 160ms;
   --dur-med: 320ms;
   --dur-slow: 620ms;
+}
+
+/* Header grows to fit its expanded three-tier top-of-page layout at
+   desktop widths (see HEADER section); hero/page-hero top padding
+   needs to clear that taller mark at first paint. */
+@media (min-width: 1040px) {
+  :root { --header-h: 160px; }
 }
 
 /* Browser surfaces: theme selection, caret and scrollbar from the
@@ -458,6 +464,21 @@ section { position: relative; }
 .site-header.menu-open .menu-toggle { color: var(--white); }
 
 @media (min-width: 1040px) {
+  /* Default (top of page): a centered three-tier mark, logo first,
+     nav below it, contact info last. This is the "arrival" moment;
+     it collapses to a compact single-row bar once scrolled below,
+     so it never eats into reading space past the first screen. */
+  .site-header {
+    height: auto;
+    padding-block: 1.5rem 1.2rem;
+  }
+  .site-header__inner {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.95rem;
+  }
+  .site-header__logo { height: 40px; }
+
   .site-header__nav {
     display: flex;
     align-items: center;
@@ -481,8 +502,27 @@ section { position: relative; }
     transition: right var(--dur-fast) var(--ease);
   }
   .site-header__nav a:hover::after { right: 0; }
+
+  .site-header__actions { justify-content: center; }
   .header-phone { display: flex; }
   .menu-toggle { display: none; }
+
+  /* Scrolled / no-hero: collapse back to a compact, left-logo /
+     right-contact single row, same shape the header has always used
+     once the page is in motion. (menu-open only exists below this
+     breakpoint, so it isn't part of this state set.) */
+  .site-header.is-scrolled,
+  .site-header.no-hero {
+    padding-block: 0;
+  }
+  .site-header.is-scrolled .site-header__inner,
+  .site-header.no-hero .site-header__inner {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+  .site-header.is-scrolled .site-header__logo,
+  .site-header.no-hero .site-header__logo { height: 34px; }
 }
 
 /* =================================================================
