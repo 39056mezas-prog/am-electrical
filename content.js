@@ -169,18 +169,6 @@ window.AM_CONTENT = {
       type: "Accent Lighting",
       alt: "LED accent lighting installed beneath a floating display shelf",
       span: "wide"
-    },
-    {
-      id: "accent-close",
-      src: "gallery-lighting-bar-close-thumb.webp",
-      full: "gallery-lighting-bar-close-full.webp",
-      width: 1024,
-      height: 576,
-      category: "Residential",
-      location: "Orange County, CA", // PLACEHOLDER
-      type: "Accent Lighting, Detail",
-      alt: "Close-up detail of LED accent lighting beneath a floating shelf",
-      span: "wide"
     }
   ],
 

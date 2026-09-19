@@ -465,6 +465,54 @@ section { position: relative; }
 .site-header.menu-open .header-phone,
 .site-header.menu-open .menu-toggle { color: var(--white); }
 
+/* Static mobile nav (home page only): below 1040px this header skips
+   the hamburger/overlay pattern entirely. Logo centered on top, the
+   full primary nav listed and centered beneath it, sitting in normal
+   document flow (not fixed) so it never has to fight the hero for
+   space. The hamburger + its overlay panel stay in the markup for
+   the rest of the site; here they're simply switched off. */
+@media (max-width: 1039.98px) {
+  .site-header--static-nav {
+    position: relative;
+    height: auto;
+    background: rgba(8, 8, 9, 0.94);
+    backdrop-filter: saturate(140%) blur(10px);
+    padding-block: 1.7rem 1.5rem;
+  }
+  .site-header--static-nav::before { opacity: 0; }
+  .site-header--static-nav .site-header__inner {
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.2rem;
+  }
+  .site-header--static-nav .site-header__logo { height: 38px; }
+  .site-header--static-nav .site-header__actions { display: none; }
+  .site-header--static-nav .site-header__nav {
+    display: flex;
+    justify-content: center;
+    gap: 0.55rem;
+  }
+  .site-header--static-nav .site-header__nav ul { flex-direction: column; }
+  .site-header--static-nav .site-header__nav a {
+    display: block;
+    color: var(--white);
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    font-size: 1.05rem;
+    text-align: center;
+    padding-block: 0.6rem;
+    border-bottom: 1px solid rgba(255,255,255,0.14);
+  }
+  .site-header--static-nav .site-header__nav li:last-child a { border-bottom: none; }
+
+  /* The nav now occupies the space a fixed header used to float
+     over, so the hero underneath only needs its own small offset,
+     not the usual fixed-header clearance. */
+  .site-header--static-nav ~ main .hero__content { padding-top: 2rem; }
+}
+
 @media (min-width: 1040px) {
   /* Arrival state (top of page, transparent over the hero photo):
      one confident row, logo left, nav and contact right, given more
