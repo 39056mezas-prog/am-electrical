@@ -119,7 +119,7 @@
    desktop widths (see HEADER section); hero/page-hero top padding
    needs to clear that taller mark at first paint. */
 @media (min-width: 1040px) {
-  :root { --header-h: 160px; }
+  :root { --header-h: 126px; }
 }
 
 /* Browser surfaces: theme selection, caret and scrollbar from the
@@ -428,9 +428,11 @@ section { position: relative; }
 .site-header::before {
   content: "";
   position: absolute;
-  inset: 0;
+  top: 0; left: 0; right: 0;
+  height: 210px;
   z-index: -1;
-  background: linear-gradient(180deg, rgba(10,10,11,0.6) 0%, rgba(10,10,11,0) 100%);
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(8,8,9,0.85) 0%, rgba(8,8,9,0.4) 55%, rgba(8,8,9,0) 100%);
   opacity: 1;
   transition: opacity var(--dur-med) var(--ease);
 }
@@ -464,25 +466,27 @@ section { position: relative; }
 .site-header.menu-open .menu-toggle { color: var(--white); }
 
 @media (min-width: 1040px) {
-  /* Default (top of page): a centered three-tier mark, logo first,
-     nav below it, contact info last. This is the "arrival" moment;
-     it collapses to a compact single-row bar once scrolled below,
-     so it never eats into reading space past the first screen. */
+  /* Arrival state (top of page, transparent over the hero photo):
+     one confident row, logo left, nav and contact right, given more
+     air than the compact bar below. It settles into a tighter
+     version of this exact same row once scrolled, rather than
+     swapping to a different arrangement, so header and hero read as
+     one architectural system instead of two unrelated layouts. */
   .site-header {
     height: auto;
-    padding-block: 1.5rem 1.2rem;
+    padding-block: 1.9rem;
   }
   .site-header__inner {
-    flex-direction: column;
-    justify-content: center;
-    gap: 0.95rem;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2rem;
   }
-  .site-header__logo { height: 40px; }
+  .site-header__logo { height: 44px; }
 
   .site-header__nav {
     display: flex;
     align-items: center;
-    gap: clamp(1.2rem, 1.8vw, 2.2rem);
+    gap: clamp(1.3rem, 1.7vw, 2.1rem);
     font-size: 0.92rem;
     font-weight: 500;
   }
@@ -503,14 +507,17 @@ section { position: relative; }
   }
   .site-header__nav a:hover::after { right: 0; }
 
-  .site-header__actions { justify-content: center; }
+  .site-header__actions {
+    justify-content: flex-end;
+    padding-left: 1.4rem;
+    border-left: 1px solid rgba(255,255,255,0.22);
+  }
   .header-phone { display: flex; }
   .menu-toggle { display: none; }
 
-  /* Scrolled / no-hero: collapse back to a compact, left-logo /
-     right-contact single row, same shape the header has always used
-     once the page is in motion. (menu-open only exists below this
-     breakpoint, so it isn't part of this state set.) */
+  /* Scrolled / no-hero: the same row, tightened, not a different
+     shape. (menu-open only exists below this breakpoint, so it
+     isn't part of this state set.) */
   .site-header.is-scrolled,
   .site-header.no-hero {
     padding-block: 0;
@@ -523,6 +530,8 @@ section { position: relative; }
   }
   .site-header.is-scrolled .site-header__logo,
   .site-header.no-hero .site-header__logo { height: 34px; }
+  .site-header.is-scrolled .site-header__actions,
+  .site-header.no-hero .site-header__actions { border-left-color: var(--line); }
 }
 
 /* =================================================================
@@ -613,7 +622,7 @@ section { position: relative; }
   height: 100%;
   object-fit: cover;
   object-position: 54% 55%;
-  filter: saturate(1.08) contrast(1.05) brightness(0.95);
+  filter: saturate(0.42) contrast(1.22) brightness(0.8) sepia(0.08);
 }
 
 /* Resting overscan so the scroll parallax (applied via JS transform)
@@ -641,17 +650,16 @@ section { position: relative; }
   }
 }
 
-/* Punk gig-poster treatment: high-contrast graphite duotone (not a
-   red wash) + halftone/grain texture for a screen-printed feel, plus
-   a bold bolt graphic as the one red accent, echoing the bolts in
-   the AM Electrical mark itself. Red stays a sharp accent here, not
-   a tint, consistent with the single-accent rule used everywhere
-   else on the site. */
+/* Cinematic field-photo treatment: high-contrast graphite duotone
+   (not a red wash) + halftone/grain texture for a screen-printed
+   feel. Red is carried only by the eyebrow and CTA here, never by
+   the image itself, consistent with the single-accent rule used
+   everywhere else on the site. */
 .hero__duotone {
   grid-area: 1 / 1;
   z-index: 1;
   background:
-    linear-gradient(165deg, rgba(10,10,11,0.58) 0%, rgba(10,10,11,0.18) 45%, rgba(10,10,11,0.6) 100%);
+    linear-gradient(165deg, rgba(8,8,9,0.74) 0%, rgba(8,8,9,0.34) 45%, rgba(8,8,9,0.76) 100%);
   mix-blend-mode: multiply;
 }
 
@@ -681,32 +689,17 @@ section { position: relative; }
 .hero__scrim {
   grid-area: 1 / 1;
   z-index: 4;
-  background: linear-gradient(0deg, rgba(10,10,11,0.72) 0%, rgba(10,10,11,0.3) 40%, rgba(10,10,11,0.16) 62%, rgba(10,10,11,0.3) 100%);
+  background: linear-gradient(0deg, rgba(8,8,9,0.84) 0%, rgba(8,8,9,0.44) 38%, rgba(8,8,9,0.2) 60%, rgba(8,8,9,0.34) 100%);
 }
 
-/* Signature bolt, bleeds off the right edge, sharp die-cut shadow.
-   The one red accent in the whole treatment, doing more work by
-   doing less of it. */
-.hero__bolt {
+/* Subtle vignette, darkens the frame edges so the eye settles in
+   the center rather than wandering off the sides, the way a graded
+   photograph (not a flat digital gradient) naturally falls off. */
+.hero__vignette {
   grid-area: 1 / 1;
   z-index: 5;
-  position: relative;
   pointer-events: none;
-}
-.hero__bolt svg {
-  position: absolute;
-  right: -3%;
-  top: 9%;
-  height: 27%;
-  width: auto;
-  filter: drop-shadow(-8px 8px 0 rgba(10,10,11,0.5));
-}
-@media (max-width: 1039px) {
-  /* Edge-tab is hidden below 1040px, bolt can safely run taller */
-  .hero__bolt svg { top: auto; bottom: -6%; height: 46%; }
-}
-@media (max-width: 720px) {
-  .hero__bolt svg { height: 34%; right: -8%; opacity: 0.85; }
+  background: radial-gradient(ellipse 80% 68% at 50% 42%, transparent 50%, rgba(6,6,7,0.52) 100%);
 }
 
 /* Signature diagonal reveal into the next section */
@@ -741,6 +734,9 @@ section { position: relative; }
 
 .hero__headline {
   color: var(--white);
+}
+.hero__headline .eyebrow {
+  margin-bottom: 1.5rem;
 }
 .hero__headline .h-display {
   color: var(--white);
@@ -802,9 +798,46 @@ section { position: relative; }
 .nameplate--light .nameplate__row { color: var(--ink); border-bottom-color: var(--line); }
 .nameplate--light .nameplate__row dt { color: var(--ink-faint); }
 
+/* Hero credibility strip: the same information a nameplate card
+   would hold, but built from nothing more than a hairline and type,
+   sitting inside the hero grid rather than bolted on top of it. */
+.hero-specs {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid rgba(255,255,255,0.28);
+  align-self: end;
+}
+.hero-specs__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding-block: 0.85rem;
+  border-bottom: 1px solid rgba(255,255,255,0.16);
+}
+.hero-specs__figure {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: 0.01em;
+  color: var(--white);
+  text-shadow: 0 1px 10px rgba(0,0,0,0.5);
+}
+a.hero-specs__figure { transition: color var(--dur-fast) var(--ease); }
+a.hero-specs__figure:hover { color: var(--red-text); }
+.hero-specs__label {
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+}
+a.hero-specs__label { transition: color var(--dur-fast) var(--ease); }
+a.hero-specs__label:hover { color: rgba(255,255,255,0.92); }
+
 @media (min-width: 900px) {
   .hero__grid {
-    grid-template-columns: minmax(0,1fr) 300px;
+    grid-template-columns: minmax(0,1fr) 320px;
     gap: 3rem;
   }
 }
@@ -878,14 +911,23 @@ section { position: relative; }
     color: var(--white);
     font-family: var(--font-mono);
     font-weight: 600;
-    font-size: 0.78rem;
-    letter-spacing: 0.14em;
+    font-size: 0.76rem;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    padding: 1.4rem 0.65rem;
-    gap: 0.6rem;
+    padding: 1.5rem 0.6rem;
+    gap: 0.65rem;
+    box-shadow: -10px 0 24px rgba(0,0,0,0.3);
     transition: background var(--dur-fast) var(--ease), padding var(--dur-fast) var(--ease);
   }
-  .edge-tab:hover { background: var(--red-deep); padding-inline: 0.85rem; }
+  .edge-tab::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--white);
+  }
+  .edge-tab:hover { background: var(--red-deep); padding-inline: 0.8rem; }
 }
 
 .mobile-emergency-bar {
