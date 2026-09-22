@@ -397,30 +397,9 @@ section { position: relative; }
   transition: color var(--dur-fast) var(--ease);
 }
 
-.menu-toggle {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-  width: 32px;
-  height: 24px;
-  color: var(--white);
-}
-.menu-toggle span {
-  display: block;
-  height: 2px;
-  width: 100%;
-  background: currentColor;
-  transition: transform var(--dur-fast) var(--ease), opacity var(--dur-fast) var(--ease);
-}
-.menu-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.menu-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
-.menu-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
 /* Transparent state (over hero) */
 .site-header { background: transparent; }
-.site-header .header-phone,
-.site-header .menu-toggle { color: var(--white); }
+.site-header .header-phone { color: var(--white); }
 
 /* A dedicated top vignette behind the transparent header state keeps
    the white logo/nav/phone legible regardless of what's in the hero
@@ -455,65 +434,95 @@ section { position: relative; }
    markup in case a future light section needs it back. */
 .site-header.is-scrolled .header-phone,
 .site-header.no-hero .header-phone { color: var(--white); }
-.site-header.is-scrolled .menu-toggle,
-.site-header.no-hero .menu-toggle { color: var(--white); }
 .site-header.is-scrolled .site-header__nav a,
 .site-header.no-hero .site-header__nav a { color: rgba(255,255,255,0.78); }
 .site-header.is-scrolled .site-header__nav a:hover,
 .site-header.no-hero .site-header__nav a:hover { color: var(--white); }
 
-/* Menu open state forces solid header for readability */
-.site-header.menu-open { background: var(--bg); box-shadow: none; }
-.site-header.menu-open .header-phone,
-.site-header.menu-open .menu-toggle { color: var(--white); }
+/* Static, always-visible mobile nav (every page): below 1040px the
+   header never uses a hamburger/overlay/accordion. Logo sits on its
+   own row; directly beneath it, the exact same primary-nav list used
+   at desktop becomes a single-row, horizontally scrollable tab bar —
+   every link visible and reachable with no tap required to reveal
+   it. The header sits in normal document flow here (not fixed), so
+   it never has to fight page content for space.
 
-/* Static mobile nav (home page only): below 1040px this header skips
-   the hamburger/overlay pattern entirely. Logo centered on top, the
-   full primary nav listed and centered beneath it, sitting in normal
-   document flow (not fixed) so it never has to fight the hero for
-   space. The hamburger + its overlay panel stay in the markup for
-   the rest of the site; here they're simply switched off. */
+   Rules below key off the #site-header id (there's only ever one)
+   rather than the .site-header--static-nav/.no-hero classes, because
+   an id selector outranks the .is-scrolled class the header also
+   picks up on any scroll (including mobile): without that, a scroll
+   of just a few pixels would let is-scrolled's height:68px win the
+   specificity fight and clip the second nav row right after it
+   appears. */
 @media (max-width: 1039.98px) {
-  .site-header--static-nav {
+  #site-header {
     position: relative;
     height: auto;
     background: rgba(8, 8, 9, 0.94);
     backdrop-filter: saturate(140%) blur(10px);
-    padding-block: 1.7rem 1.5rem;
+    box-shadow: none;
+    padding-block: 1.1rem 0;
   }
-  .site-header--static-nav::before { opacity: 0; }
-  .site-header--static-nav .site-header__inner {
+  #site-header::before { opacity: 0; }
+  #site-header .site-header__inner {
     flex-direction: column;
+    align-items: center;
     justify-content: center;
-    gap: 1.2rem;
+    gap: 1rem;
+    padding-inline: 0;
   }
-  .site-header--static-nav .site-header__logo { height: 38px; }
-  .site-header--static-nav .site-header__actions { display: none; }
-  .site-header--static-nav .site-header__nav {
-    display: flex;
-    justify-content: center;
-    gap: 0.55rem;
+  #site-header .site-header__logo {
+    height: 38px;
+    padding-inline: var(--gutter);
   }
-  .site-header--static-nav .site-header__nav ul { flex-direction: column; }
-  .site-header--static-nav .site-header__nav a {
+  #site-header .site-header__actions { display: none; }
+
+  /* The tab bar itself: one row, no wrapping, scrolls horizontally
+     instead of stacking links into a column. Edge padding matches
+     the page gutter so the row lines up with content above/below;
+     scroll-padding keeps a partially-scrolled link from hiding under
+     that same edge padding. */
+  #site-header .site-header__nav {
     display: block;
+    width: 100%;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  #site-header .site-header__nav ul {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+  }
+  #site-header .site-header__nav ul::-webkit-scrollbar { display: none; }
+  #site-header .site-header__nav li { flex: 0 0 auto; }
+  #site-header .site-header__nav a {
+    display: block;
+    white-space: nowrap;
     color: rgba(255,255,255,0.82);
     font-weight: 400;
     letter-spacing: 0.01em;
-    font-size: 0.98rem;
+    font-size: 0.92rem;
     text-align: center;
-    padding-block: 0.6rem;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    transition: color var(--dur-fast) var(--ease);
+    padding: 0.9rem 0.95rem;
+    border-bottom: 2px solid transparent;
+    transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
   }
-  .site-header--static-nav .site-header__nav a:hover,
-  .site-header--static-nav .site-header__nav a:active { color: var(--white); }
-  .site-header--static-nav .site-header__nav li:last-child a { border-bottom: none; }
+  #site-header .site-header__nav a:hover,
+  #site-header .site-header__nav a:active {
+    color: var(--white);
+    border-bottom-color: var(--red);
+  }
 
-  /* The nav now occupies the space a fixed header used to float
-     over, so the hero underneath only needs its own small offset,
-     not the usual fixed-header clearance. */
+  /* The nav bar now occupies the space a fixed header used to float
+     over, so hero/page-hero content underneath only needs a small
+     offset, not the usual fixed-header clearance. */
   .site-header--static-nav ~ main .hero__content { padding-top: 2rem; }
+  .site-header.no-hero ~ main .page-hero { padding-top: clamp(40px, 8vw, 64px); }
 }
 
 @media (min-width: 1040px) {
@@ -566,7 +575,6 @@ section { position: relative; }
     border-left: 1px solid rgba(255,255,255,0.16);
   }
   .header-phone { display: flex; }
-  .menu-toggle { display: none; }
 
   /* Scrolled / no-hero: the same row, tightened, not a different
      shape. (menu-open only exists below this breakpoint, so it
@@ -585,58 +593,6 @@ section { position: relative; }
   .site-header.no-hero .site-header__logo { height: 34px; }
   .site-header.is-scrolled .site-header__actions,
   .site-header.no-hero .site-header__actions { border-left-color: var(--line); }
-}
-
-/* =================================================================
-   MOBILE MENU PANEL
-   ================================================================= */
-.mobile-menu {
-  position: fixed;
-  inset: 0;
-  z-index: 480;
-  background: var(--bg);
-  display: flex;
-  flex-direction: column;
-  padding: calc(var(--header-h) + 1rem) var(--gutter) 2.5rem;
-  transform: translateX(100%);
-  transition: transform var(--dur-med) var(--ease);
-  visibility: hidden;
-}
-.mobile-menu.is-open {
-  transform: translateX(0);
-  visibility: visible;
-}
-.mobile-menu__nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  margin-top: 1rem;
-}
-.mobile-menu__nav a {
-  font-family: var(--font-display);
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 2.1rem;
-  padding-block: 0.55rem;
-  border-bottom: 1px solid var(--line);
-}
-.mobile-menu__foot {
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-.mobile-menu__call {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  font-family: var(--font-mono);
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--red-text);
-}
-@media (min-width: 1040px) {
-  .mobile-menu { display: none; }
 }
 
 /* =================================================================

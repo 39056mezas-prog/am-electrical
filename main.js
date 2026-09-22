@@ -28,60 +28,6 @@
   }
 
   /* ---------------------------------------------------------------
-     Mobile menu
-     --------------------------------------------------------------- */
-  function initMobileMenu() {
-    var toggle = qs(".menu-toggle");
-    var panel = qs("#mobile-menu");
-    var header = qs(".site-header");
-    var emergencyBar = qs("#mobile-emergency-bar");
-    if (!toggle || !panel) return;
-
-    // The persistent emergency bar sits behind the full-screen menu
-    // panel visually (lower z-index) but stays in the DOM, without
-    // this it would still be reachable by keyboard while hidden.
-    function setBehindPanelFocusable(focusable) {
-      if (!emergencyBar) return;
-      var link = emergencyBar.tagName === "A" ? emergencyBar : qs("a", emergencyBar);
-      if (!link) return;
-      if (focusable) {
-        link.removeAttribute("tabindex");
-        emergencyBar.removeAttribute("aria-hidden");
-      } else {
-        link.setAttribute("tabindex", "-1");
-        emergencyBar.setAttribute("aria-hidden", "true");
-      }
-    }
-
-    function close() {
-      toggle.setAttribute("aria-expanded", "false");
-      panel.classList.remove("is-open");
-      header.classList.remove("menu-open");
-      document.body.style.overflow = "";
-      setBehindPanelFocusable(true);
-    }
-    function open() {
-      toggle.setAttribute("aria-expanded", "true");
-      panel.classList.add("is-open");
-      header.classList.add("menu-open");
-      document.body.style.overflow = "hidden";
-      setBehindPanelFocusable(false);
-      var firstLink = qs("a", panel);
-      if (firstLink) firstLink.focus();
-    }
-    toggle.addEventListener("click", function () {
-      var isOpen = toggle.getAttribute("aria-expanded") === "true";
-      isOpen ? close() : open();
-    });
-    panel.addEventListener("click", function (e) {
-      if (e.target.tagName === "A") close();
-    });
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") close();
-    });
-  }
-
-  /* ---------------------------------------------------------------
      Hero parallax + scale (signature scroll moment).
      Implemented entirely in CSS via scroll-driven animations
      (animation-timeline: scroll()), see styles.css. No scroll
@@ -362,7 +308,6 @@
      --------------------------------------------------------------- */
   document.addEventListener("DOMContentLoaded", function () {
     initHeader();
-    initMobileMenu();
     initHeroParallax();
     initMobileEmergencyBar();
     initCapabilityAccordion();
