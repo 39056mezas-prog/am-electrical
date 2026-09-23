@@ -28,6 +28,22 @@
   }
 
   /* ---------------------------------------------------------------
+     Nav tab bar: keep the focused link in view.
+     Chromium (and others) don't auto-scroll a horizontally-scrolling
+     container when a child inside it receives keyboard focus, so
+     tabbing past the visible edge leaves the focus ring half off-
+     screen. block:"nearest" keeps this from also nudging the whole
+     page vertically just because a header link was focused.
+     --------------------------------------------------------------- */
+  function initNavFocusScroll() {
+    qsa(".site-header__nav a").forEach(function (link) {
+      link.addEventListener("focus", function () {
+        link.scrollIntoView({ block: "nearest", inline: "nearest" });
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------------
      Hero parallax + scale (signature scroll moment).
      Implemented entirely in CSS via scroll-driven animations
      (animation-timeline: scroll()), see styles.css. No scroll
@@ -169,6 +185,17 @@
     if (!form) return;
     var status = qs("#form-status");
 
+    // Footer/nav links to a specific service (e.g. /?service=Maintenance#contact)
+    // land here with that service already chosen, so the visitor doesn't
+    // have to pick it again themselves.
+    var serviceField = qs("#field-service-type", form);
+    if (serviceField) {
+      var requested = new URLSearchParams(window.location.search).get("service");
+      if (requested && qs('option[value="' + requested + '"]', serviceField)) {
+        serviceField.value = requested;
+      }
+    }
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (!form.checkValidity()) { form.reportValidity(); return; }
@@ -308,6 +335,7 @@
      --------------------------------------------------------------- */
   document.addEventListener("DOMContentLoaded", function () {
     initHeader();
+    initNavFocusScroll();
     initHeroParallax();
     initMobileEmergencyBar();
     initCapabilityAccordion();

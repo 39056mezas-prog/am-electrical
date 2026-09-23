@@ -87,6 +87,7 @@
   --white: #FFFFFF;
   --red: #D9010D;
   --red-text: #FF4433;     /* brightened variant for red used as small text on dark, 4.5:1+ */
+  --red-text-on-tint: #FF6B5C; /* --red-text reads 4.0-4.3:1 on --bg-raised-2 and --red-tint specifically; this clears 4.5:1 on both */
   --red-deep: #A5000A;
   --red-tint: rgba(217, 1, 13, 0.14);
   /* Aliases: earlier "on-dark" tokens existed for the few sections that
@@ -416,8 +417,7 @@ section { position: relative; }
   transition: opacity var(--dur-med) var(--ease);
 }
 .site-header.is-scrolled::before,
-.site-header.no-hero::before,
-.site-header.menu-open::before { opacity: 0; }
+.site-header.no-hero::before { opacity: 0; }
 
 /* Scrolled / solid state, also used statically (.no-hero) on pages
    that open with a dark page-hero or no hero at all, so the header
@@ -495,7 +495,11 @@ section { position: relative; }
   #site-header .site-header__nav ul {
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: flex-start;
+    /* Center the row under the centered logo when it fits (tablet
+       widths); "safe" falls back to start-alignment the moment it
+       has to scroll, so the first link is never the one pushed
+       half off-screen. */
+    justify-content: safe center;
     gap: 0.15rem;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -611,8 +615,7 @@ section { position: relative; }
   .header-phone { display: flex; }
 
   /* Scrolled / no-hero: the same row, tightened, not a different
-     shape. (menu-open only exists below this breakpoint, so it
-     isn't part of this state set.) */
+     shape. */
   .site-header.is-scrolled,
   .site-header.no-hero {
     padding-block: 0;
@@ -809,7 +812,7 @@ section { position: relative; }
 }
 .nameplate__head {
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(255,255,255,0.55);
@@ -1422,7 +1425,7 @@ a.hero-specs__label:hover { color: rgba(255,255,255,0.92); }
 
 .area-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.6rem; }
 .area-tags .tag { background: var(--bg-raised-2); }
-.area-tags .tag--primary { border-color: var(--red); color: var(--red-text); }
+.area-tags .tag--primary { border-color: var(--red); color: var(--red-text-on-tint); }
 
 .radius-diagram { width: 100%; height: auto; }
 .radius-diagram .ring { fill: none; stroke: var(--line-strong); stroke-dasharray: 4 5; }
@@ -1471,7 +1474,7 @@ a.hero-specs__label:hover { color: rgba(255,255,255,0.92); }
 .contact-card dd { font-weight: 600; font-size: 1.05rem; }
 .contact-card dd a:hover { color: var(--red-text); }
 .contact-card .row--emergency { background: var(--red-tint); margin-inline: -1.2rem; padding-inline: 1.2rem; border-top-color: transparent; border-bottom: 1px solid transparent; }
-.contact-card .row--emergency dt { color: var(--red-text); }
+.contact-card .row--emergency dt { color: var(--red-text-on-tint); }
 .contact-card .row--emergency dd { color: var(--red-deep); font-family: var(--font-mono); }
 
 .form-grid {
