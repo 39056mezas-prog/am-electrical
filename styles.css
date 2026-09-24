@@ -789,9 +789,28 @@ section { position: relative; }
   text-shadow: 0 2px 24px rgba(0,0,0,0.45), 0 1px 4px rgba(0,0,0,0.7);
 }
 
+.hero__subhead {
+  font-size: clamp(1.05rem, 0.5vw + 0.95rem, 1.3rem);
+  font-weight: 500;
+  color: rgba(255,255,255,0.92);
+  margin-top: 1rem;
+  max-width: 38em;
+  text-shadow: 0 1px 12px rgba(0,0,0,0.5);
+}
+
+.hero__tagline {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: clamp(0.95rem, 0.3vw + 0.88rem, 1.1rem);
+  color: rgba(255,255,255,0.58);
+  margin-top: 0.7rem;
+}
+
 .hero__lede {
   color: rgba(255,255,255,0.88);
-  margin-top: 1.2rem;
+  margin-top: 0.5rem;
   max-width: 40em;
   text-shadow: 0 1px 12px rgba(0,0,0,0.5);
 }
