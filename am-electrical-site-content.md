@@ -26,7 +26,7 @@ Lake Forest (primary), Irvine, Mission Viejo, Laguna Hills, Laguna Niguel, Ranch
 
 **Service categories:** Commercial, Industrial, Residential — plus a dedicated Property Management offering.
 
-**Service types (used in the contact form dropdown):** Emergency, Service, Maintenance, Installation, Other.
+**Service types (used in the contact form dropdown):** Emergency, Service, Maintenance, Installation, Troubleshooting, Other.
 
 **Payment methods accepted:** Visa, Mastercard, American Express, Discover, Cash, Check. Messaging: "Upfront pricing, paid however works best for you."
 
@@ -47,10 +47,21 @@ Lake Forest (primary), Irvine, Mission Viejo, Laguna Hills, Laguna Niguel, Ranch
 | Page | URL | Purpose |
 |---|---|---|
 | Home | `/` | Full overview, hero, services, gallery, testimonial, contact form |
-| Residential | `/residential` | Residential-focused landing page |
-| Commercial & Industrial | `/commercial` | Commercial/industrial-focused landing page |
+| Residential | `/residential-electrician` | Residential-focused landing page (renamed from `/residential` 2026-09-24; old URL 301s here) |
+| Commercial & Industrial | `/commercial-electrician` | Commercial/industrial-focused landing page (renamed from `/commercial` 2026-09-24; old URL 301s here) |
 | Bonded & Insured | `/bonded-insured` | Trust/credentials explainer page |
-| Property Management | `/property-management-electrician-lake-forest-ca` | Landing page targeting property managers/HOAs/landlords |
+| Emergency Electrician | `/emergency-electrician` | 24-hour emergency response landing page (added 2026-09-24) |
+| Electrical Panel Repair | `/electrical-panel-repair` | Panel repair/replacement/upgrade landing page (added 2026-09-24) |
+| Electrical Troubleshooting | `/electrical-troubleshooting` | Fault diagnosis landing page (added 2026-09-24) |
+| Electrician in Lake Forest, CA | `/electrician-lake-forest-ca` | Location page — home base, spans 5+ decades of construction (added 2026-09-24) |
+| Electrician in Irvine, CA | `/electrician-irvine-ca` | Location page — HOA-governed villages, wide age range (added 2026-09-24) |
+| Electrician in Mission Viejo, CA | `/electrician-mission-viejo-ca` | Location page — uniform 1966-1980 housing stock, panel-repair angle (added 2026-09-24) |
+| Electrician in Laguna Hills, CA | `/electrician-laguna-hills-ca` | Location page — small hillside city, longtime homeowners (added 2026-09-24) |
+| Electrician in Laguna Niguel, CA | `/electrician-laguna-niguel-ca` | Location page — hillside terrain, larger/older properties (added 2026-09-24) |
+| Electrician in Rancho Santa Margarita, CA | `/electrician-rancho-santa-margarita-ca` | Location page — youngest housing stock, EV charger angle (added 2026-09-24) |
+| Electrician in Costa Mesa, CA | `/electrician-costa-mesa-ca` | Location page — mid-century homes + South Coast Metro commercial (added 2026-09-24) |
+| Electrician in Newport Beach, CA | `/electrician-newport-beach-ca` | Location page — coastal corrosion + luxury estates (added 2026-09-24) |
+| Property Management | `/property-management-electrician-lake-forest-ca` | Landing page targeting property managers/HOAs/landlords — **listed in sitemap.xml and linked from the Commercial page, but the page itself was never built. Currently a 404.** |
 | Privacy Policy | `/privacy` | Legal page |
 
 **Primary navigation (header, used on every page):** Residential, Commercial, About, Bonded & Insured, Contact.
@@ -158,7 +169,7 @@ Eyebrow: "Field work." Intro: "A running record of work across commercial and re
 
 ---
 
-## 5. Residential page (`/residential`)
+## 5. Residential page (`/residential-electrician`)
 
 ### Meta
 - **Title:** Residential Electrician Lake Forest CA | AM Electrical
@@ -192,7 +203,7 @@ Same ledger as homepage but scoped: "37 years serving homes across Orange County
 
 ---
 
-## 6. Commercial & Industrial page (`/commercial`)
+## 6. Commercial & Industrial page (`/commercial-electrician`)
 
 ### Meta
 - **Title:** Commercial & Industrial Electrician Lake Forest CA | AM Electrical

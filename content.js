@@ -216,6 +216,6 @@ window.AM_CONTENT = {
     ]
   },
 
-  serviceTypeOptions: ["Emergency", "Service", "Maintenance", "Installation", "Other"],
+  serviceTypeOptions: ["Emergency", "Service", "Maintenance", "Installation", "Troubleshooting", "Other"],
   propertyTypeOptions: ["Residential", "Commercial", "Industrial"]
 };

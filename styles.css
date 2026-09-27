@@ -798,16 +798,6 @@ section { position: relative; }
   text-shadow: 0 1px 12px rgba(0,0,0,0.5);
 }
 
-.hero__tagline {
-  font-family: var(--font-display);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  font-size: clamp(0.95rem, 0.3vw + 0.88rem, 1.1rem);
-  color: rgba(255,255,255,0.58);
-  margin-top: 0.7rem;
-}
-
 .hero__lede {
   color: rgba(255,255,255,0.88);
   margin-top: 0.5rem;
@@ -1389,7 +1379,7 @@ a.hero-specs__label:hover { color: rgba(255,255,255,0.92); }
   background-repeat: no-repeat;
   background-position: center;
 }
-.index-list strong { font-weight: 600; }
+.index-list strong { font-weight: 600; flex-shrink: 0; }
 .index-list span { color: var(--ink-soft); }
 
 .photo-collage {
