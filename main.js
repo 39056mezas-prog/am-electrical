@@ -120,21 +120,6 @@
   }
 
   /* ---------------------------------------------------------------
-     Capability accordion, behavior only; rows are already in the
-     markup for SEO/no-JS readability, this just wires the toggle.
-     --------------------------------------------------------------- */
-  function initCapabilityAccordion() {
-    qsa(".cap-row__trigger").forEach(function (trigger) {
-      trigger.addEventListener("click", function () {
-        var row = trigger.closest(".cap-row");
-        var expanded = trigger.getAttribute("aria-expanded") === "true";
-        trigger.setAttribute("aria-expanded", String(!expanded));
-        if (row) row.setAttribute("data-open", String(!expanded));
-      });
-    });
-  }
-
-  /* ---------------------------------------------------------------
      Scroll reveal: section-level fade/rise as content enters the
      viewport. IntersectionObserver only, no scroll listener, fully
      skipped for prefers-reduced-motion. Motivated by hierarchy: it
@@ -143,7 +128,7 @@
   function initScrollReveal() {
     if (prefersReducedMotion || !("IntersectionObserver" in window)) return;
     var targets = qsa(
-      ".section-pad, .section-pad-sm, .emergency-band, .page-cta-band, .emergency-split-card, .gallery-item"
+      ".section-pad, .section-pad-sm, .page-cta-band, .emergency-split-card, .gallery-item"
     );
     if (!targets.length) return;
 
@@ -338,7 +323,6 @@
     initNavFocusScroll();
     initHeroParallax();
     initMobileEmergencyBar();
-    initCapabilityAccordion();
     initFooterYear();
     initGallery();
     initContactForm();
